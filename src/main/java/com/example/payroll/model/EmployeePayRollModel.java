@@ -1,17 +1,21 @@
 package com.example.payroll.model;
 
+import jakarta.persistence.*;
 import lombok.*;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "employee_payroll")
 public class EmployeePayRollModel {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
-    public EmployeePayRollModel(int i, String name2, long salary2) {
-		
-	}
-	public int getId() {
+    public int getId() {
 		return id;
 	}
 	public void setId(int id) {

@@ -2,34 +2,34 @@ package com.example.payroll.service;
 
 import com.example.payroll.DTO.EmployeePayRollDTO;
 import com.example.payroll.model.EmployeePayRollModel;
+import com.example.payroll.repository.EmployeePayRollRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class EmployeePayRollServiceImpl implements EmployeePayRollService {
 
-    private List<EmployeePayRollModel> employeeList = new ArrayList<>();
-    private int currentId = 1;
+    @Autowired
+    private EmployeePayRollRepository repository;
 
     @Override
     public List<EmployeePayRollModel> getAllEmployees() {
-        return employeeList;
+        return repository.findAll();
     }
 
     @Override
     public EmployeePayRollModel getEmployeeById(int empId) {
-        return employeeList.stream()
-                .filter(emp -> emp.getId() == empId)
-                .findFirst()
-                .orElse(null);
+        return repository.findById(empId).orElse(null);
     }
 
     @Override
     public EmployeePayRollModel createEmployee(EmployeePayRollDTO dto) {
-        EmployeePayRollModel emp = new EmployeePayRollModel(currentId++, dto.getName(), dto.getSalary());
-        employeeList.add(emp);
-        return emp;
+        EmployeePayRollModel emp = new EmployeePayRollModel();
+        emp.setName(dto.getName());
+        emp.setSalary(dto.getSalary());
+        return repository.save(emp);
     }
 
     @Override
@@ -38,12 +38,13 @@ public class EmployeePayRollServiceImpl implements EmployeePayRollService {
         if (emp != null) {
             emp.setName(dto.getName());
             emp.setSalary(dto.getSalary());
+            return repository.save(emp);
         }
-        return emp;
+        return null;
     }
 
     @Override
     public void deleteEmployee(int empId) {
-        employeeList.removeIf(emp -> emp.getId() == empId);
+        repository.deleteById(empId);
     }
 }
